@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import re
 import string
@@ -9,7 +10,7 @@ vectorizer = joblib.load("vectorizer.pkl")
 
 # Flask app
 app = Flask(__name__)
-
+CORS(app)
 # Text cleaning function
 def clean_text(text):
     text = text.lower()
@@ -21,9 +22,9 @@ def clean_text(text):
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
-    headline = data.get("headline", "")
+    title = data.get("headline", "")
     text = data.get("text", "")
-    content = clean_text(headline + " " + text)
+    content = clean_text(title + " " + text)
 
     vector = vectorizer.transform([content])
     prediction = model.predict(vector)[0]
