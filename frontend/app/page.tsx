@@ -19,7 +19,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50 text-gray-800">
+<>
+    <div className=" flex justify-center flex-col col-1  min-h-screen p-6 bg-gray-300 text-gray-800">
       <h1 className="text-2xl font-bold mb-4">🧠 Fake News Detector</h1>
       <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
         <input
@@ -57,5 +58,6 @@ export default function Home() {
         </div>
       )}
     </div>
+</>
   );
 }
