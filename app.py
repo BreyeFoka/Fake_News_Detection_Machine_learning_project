@@ -40,14 +40,15 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from transformers import BertTokenizer, TFBertForSequenceClassification
-import tensorflow as tf
+# Load model directly
+from transformers import pipeline
+
+
 import re
 import string
 
-# Load tokenizer and model
-model = TFBertForSequenceClassification.from_pretrained("./fake_news_model")
-tokenizer = BertTokenizer.from_pretrained("./fake_news_model")
+# Load  the model
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
 # Create Flask app
 app = Flask(__name__)
@@ -67,20 +68,21 @@ def predict():
     data = request.json
     headline = data.get("headline", "")
     text = data.get("text", "")
-    full_text = clean_text(headline + " " + text)
+    input= clean_text(headline + " " + text)
 
-    # Tokenize input
-    inputs = tokenizer(full_text, return_tensors="tf", truncation=True, padding=True, max_length=512)
+
 
     # Make prediction
-    outputs = model(inputs)
-    probs = tf.nn.softmax(outputs.logits, axis=1).numpy()[0]
-    predicted_label = int(probs.argmax())
-    confidence = float(probs.max())
+    outputs = classifier(input, 
+                         candidate_labels=['Real', 'Fake'])
+
+    print(f"Sample {input} :")
+    print(f"Prediction: {outputs['labels'][0].upper()} ({outputs['scores'][0]*100:.2f}%)")
+
 
     return jsonify({
-        "prediction": "real" if predicted_label == 1 else "fake",
-        "confidence": confidence
+        "prediction": outputs
+        # "confidence": outputs['scores']
     })
 
 if __name__ == "__main__":
