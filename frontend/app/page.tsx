@@ -8,7 +8,7 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/predict", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL , {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ headline, text }),
@@ -45,7 +45,7 @@ export default function Home() {
       </form>
 
       {result && (
-        <div className="mt-6 p-4 border rounded bg-white">
+        <div className="mt-6 p-4 border rounded bg-gray-300">
           <p>
             <strong>Prediction:</strong>{" "}
             <span className={result.prediction === "real" ? "text-green-600" : "text-red-600"}>
@@ -53,7 +53,7 @@ export default function Home() {
             </span>
           </p>
           <p>
-            <strong>Confidence:</strong> {(result.confidence * 100).toFixed(2)}%
+            <strong>Confidence:</strong> {(result.confidence).toFixed(2)}%
           </p>
         </div>
       )}
