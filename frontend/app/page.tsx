@@ -39,12 +39,16 @@ export default function Home() {
       }
       const data = await res.json();
       // Support both huggingface and classic output
-      let prediction = data.prediction?.labels ? data.prediction.labels[0] : data.prediction;
-      let confidence = data.prediction?.scores ? data.prediction.scores[0] * 100 : data.confidence * 100 || 0;
+      const prediction = data.prediction?.labels ? data.prediction.labels[0] : data.prediction;
+      const confidence = data.prediction?.scores ? data.prediction.scores[0] * 100 : data.confidence * 100 || 0;
       setResult({ prediction, confidence });
       setHistory(prev => [{headline, text, prediction, confidence}, ...prev.slice(0, 4)]);
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again!");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Something went wrong. Please try again!");
+      } else {
+        setError("Something went wrong. Please try again!");
+      }
       setResult({ prediction: "error", confidence: 0 });
     }
     setLoading(false);
