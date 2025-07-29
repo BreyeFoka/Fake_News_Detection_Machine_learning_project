@@ -11,7 +11,10 @@ classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnl
 
 # Flask setup
 app = Flask(__name__)
-CORS(app, origins=["*"], methods=["GET", "POST", "OPTIONS"], allow_headers=["Content-Type", "Authorization"])
+
+# CORS configuration - get allowed origins from environment variable
+allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+CORS(app, origins=allowed_origins, methods=["GET", "POST", "OPTIONS"], allow_headers=["Content-Type", "Authorization"])
 
 # Text cleaning function
 def clean_text(text):
@@ -40,7 +43,9 @@ def predict():
     # Handle preflight OPTIONS request
     if request.method == "OPTIONS":
         response = jsonify({"status": "OK"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
+        origin = request.headers.get('Origin')
+        if origin in allowed_origins:
+            response.headers.add("Access-Control-Allow-Origin", origin)
         response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
         response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
         return response
@@ -87,7 +92,13 @@ def predict():
 @app.after_request
 def after_request(response):
     """Add CORS headers to all responses"""
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    # Get the origin from the request
+    origin = request.headers.get('Origin')
+    if origin in allowed_origins:
+        response.headers.add('Access-Control-Allow-Origin', origin)
+    elif 'http://localhost:3000' in allowed_origins:  # Fallback for development
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
