@@ -103,9 +103,9 @@ export default function Home() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 120 }}
-          className="text-4xl font-extrabold mb-6 text-center tracking-tight bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent drop-shadow-lg"
+          className="text-4xl font-extrabold mb-6 text-center tracking-tight bg-blue-600 bg-clip-text text-transparent drop-shadow-lg"
         >
-          🧠 Fake News Detector
+        ppFake News Detector
         </motion.h1>
 
         <div className="mb-6 text-center">
@@ -127,7 +127,7 @@ export default function Home() {
           <motion.textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Paste the news article text here..."
+            placeholder="Paste the news article text here..." 
             rows={6}
             className="w-full border-2 border-purple-400 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-800 text-white placeholder:text-purple-300 shadow-md transition-all duration-300 resize-vertical"
             whileFocus={{ scale: 1.02 }}
