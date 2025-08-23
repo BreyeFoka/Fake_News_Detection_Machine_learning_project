@@ -97,7 +97,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-800 to-pink-600 text-white">
+    <main className="min-h-screen flex items-center justify-center bg-blue-600 text-white">
       <div className="w-full max-w-4xl mx-auto p-8 rounded-3xl shadow-2xl bg-opacity-80 bg-gray-900 backdrop-blur-lg">
         <motion.h1
           initial={{ scale: 0.8, opacity: 0 }}
@@ -105,12 +105,12 @@ export default function Home() {
           transition={{ type: "spring", stiffness: 120 }}
           className="text-4xl font-extrabold mb-6 text-center tracking-tight bg-blue-600 bg-clip-text text-transparent drop-shadow-lg"
         >
-        ppFake News Detector
+        Fake News Detector
         </motion.h1>
 
         <div className="mb-6 text-center">
           <span className="text-xs text-gray-400">
-            Powered by <span className="font-bold text-pink-300">HuggingFace BART Large MNLI</span>
+            Powered by <span className="font-bold text-blue-300">HuggingFace BART Large MNLI</span>
           </span>
         </div>
 
@@ -136,7 +136,7 @@ export default function Home() {
           <div className="flex gap-4 flex-wrap">
             <motion.button
               type="submit"
-              className="flex-1 py-3 px-6 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="flex-1 py-3 px-6 bg-blue-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               whileHover={{ scale: loading ? 1 : 1.05 }}
               disabled={loading}
             >
@@ -179,7 +179,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 30 }}
               transition={{ duration: 0.5 }}
-              className="mt-8 p-6 rounded-2xl shadow-xl bg-gradient-to-br from-gray-800 via-purple-900 to-pink-800 border-2 border-blue-400"
+              className="mt-8 p-6 rounded-2xl shadow-xl bg-blue-600 border-2 border-blue-400"
             >
               <div className="text-center mb-4">
                 <h2 className="text-2xl font-bold mb-2">Analysis Result</h2>
