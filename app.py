@@ -14,6 +14,8 @@ app = Flask(__name__)
 
 # CORS configuration - get allowed origins from environment variable
 allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+print("Allowed origins:", allowed_origins)
+
 CORS(app, origins=allowed_origins, methods=["GET", "POST", "OPTIONS"], allow_headers=["Content-Type", "Authorization"])
 
 # Text cleaning function
@@ -37,22 +39,16 @@ def health_check():
         "model": "facebook/bart-large-mnli"
     })
 
-@app.route("/predict", methods=["POST", "OPTIONS"])
+# Check if server is running fine
+@app.route("/healthCheck", methods=["POST"])
+def checkHealth():
+    return jsonify({"success": "Server Up and Running"}), 200
+
+@app.route("/predict", methods=["POST"])
 def predict():
     """Main prediction endpoint"""
-    # Handle preflight OPTIONS request
-    if request.method == "OPTIONS":
-        response = jsonify({"status": "OK"})
-        origin = request.headers.get('Origin')
-        if origin in allowed_origins:
-            response.headers.add("Access-Control-Allow-Origin", origin)
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-        response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-        return response
-    
     try:
         data = request.json
-        
         if not data:
             return jsonify({"error": "No data provided"}), 400
         
@@ -88,20 +84,6 @@ def predict():
         response = jsonify({"error": f"Internal server error: {str(e)}"})
         response.status_code = 500
         return response
-
-@app.after_request
-def after_request(response):
-    """Add CORS headers to all responses"""
-    # Get the origin from the request
-    origin = request.headers.get('Origin')
-    if origin in allowed_origins:
-        response.headers.add('Access-Control-Allow-Origin', origin)
-    elif 'http://localhost:3000' in allowed_origins:  # Fallback for development
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-    return response
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
